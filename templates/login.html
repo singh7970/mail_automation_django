@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZestBotz Login</title>
+  <link href="{% static 'css/login.css' %}" rel="stylesheet" />
+
+</head>
+<body>
+  <div class="login-container">
+  <form class="login-form" method="POST">
+  {% csrf_token %}
+  <!-- Logo inside form -->
+  <img src="{% static 'images/zestlogo.png' %}" alt="ZestBotz Logo" class="form-logo" />
+  <h2>Login to ZestReach </h2>
+
+  <input type="email" name="email" placeholder="Enter your Gmail" required />
+  <input type="password" name="password" placeholder="Enter your Password" required />
+
+  <button type="submit">Login</button>
+
+  {% if messages %}
+    <ul>
+      {% for message in messages %}
+        <li style="color: red;">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+   
+    <div class="terms-group">
+                If you don't have an account? <a href="{% url 'register_page' %}">Register</a>
+            </div>        
+</form>
+
+  </div>
+</body>
+</html>

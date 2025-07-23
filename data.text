@@ -1,0 +1,9 @@
+for payment integrations
+
+ Step 1: Install Razorpay Python SDK
+ pip install razorpay
+💥 Step 2: Add your Razorpay keys in Django settings
+    # settings.py
+
+ RAZORPAY_KEY_ID = "your_razorpay_key_id"
+ RAZORPAY_KEY_SECRET = "your_razorpay_key_secret"

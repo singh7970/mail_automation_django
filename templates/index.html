@@ -1,0 +1,167 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZestReach SAAS</title>
+  <link href="{% static 'css/index.css' %}" rel="stylesheet" />
+
+</head>
+
+<body>
+  
+  <div class="container">
+
+   <div class="header" >
+  <img src="{% static 'images/zestlogo.png' %}" alt="ZestBotz Logo" style="height: 50px;">
+
+  <div>
+    <h1>ZestReach By ZestBotz</h1>
+    <p>Create, customize, and send professional email campaigns</p>
+  </div>
+</div>
+
+
+    <form id="emailForm" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+      {% csrf_token %}
+      <div class="main-content">
+        <!-- ✅ Left Panel -->
+        <div class="left-panel">
+          <div class="tabs">
+            <button class="tab active" onclick="switchTab('email'); return false;"><span>✉️</span> Email</button>
+            <button class="tab" onclick="switchTab('sms'); return false;"><span>💬</span> SMS</button>
+          </div>
+
+          <div id="email-content" class="tab-content">
+            <!-- <div class="form-group">
+              <label for="campaign-name">Campaign Name</label>
+              <input type="text" id="campaign-name" name="campaign_name" placeholder="Enter campaign name" required />
+            </div> -->
+
+            <div class="form-group">
+              <label for="sender-email">Sender Email Address</label>
+              <input type="email" id="sender-email" name="sender_email" placeholder="contact@salon.com" required />
+            </div>
+
+            <div class="form-group">
+              <label for="subject-line">Subject Line</label>
+              <input type="text" id="subject-line" name="subject_line" placeholder="Enter email subject" required />
+            </div>
+
+            <div class="form-group">
+              <label for="email-message">Email Content</label>
+              <textarea id="email-message" name="emailBody" placeholder="Compose your email message..."
+                required></textarea>
+            </div>
+
+            <!-- ✅ Attachments -->
+            <div class="form-group">
+              <input type="file" id="attachmentInput" name="attachments" multiple hidden
+                onchange="updateAttachmentLabel()" />
+              <button type="button" class="btn btn-secondary"
+                onclick="document.getElementById('attachmentInput').click();">
+                <span>📎</span> Add Attachment
+              </button>
+              <p id="attachment-label" style="margin-top: 8px; font-size: 0.9em; color: #555;"></p>
+            </div>
+
+            <div class="action-buttons">
+              <button type="button" class="btn btn-secondary" onclick="openAIModal()"><span>🤖</span> AI Prompt</button>
+              <button type="button" class="btn btn-secondary"><span>🎨</span> Use Template Builder</button>
+            </div>
+
+          <button type="submit" class="btn btn-send" {% if not has_access %}disabled style="opacity: 0.6; cursor: not-allowed;"{% endif %}>
+    Send Email
+</button>
+{% if not has_access %}
+  <p style="color: red; margin-top: 10px;">Your subscription is inactive. Please subscribe to use this feature.</p>
+{% endif %}
+<!--  -->
+            {% if messages %}
+            <ul class="messages">
+              {% for message in messages %}
+              <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                {{ message }}
+              </div>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </div>
+
+          <!-- ✅ SMS Tab -->
+          <div id="sms-content" class="tab-content" style="display: none;">
+            <div class="form-group">
+              <label for="sms-campaign">SMS Campaign Name</label>
+              <input type="text" id="sms-campaign" placeholder="Enter SMS campaign name" />
+            </div>
+
+            <div class="form-group">
+              <label for="sms-message">SMS Message</label>
+              <textarea id="sms-message" placeholder="Enter your SMS message (160 characters max)"
+                maxlength="160"></textarea>
+            </div>
+
+            <button class="btn btn-send">Send SMS</button>
+          </div>
+        </div>
+
+        <!-- ✅ Right Panel -->
+        <div class="right-panel">
+          <a href="{% url 'logout_view' %}" class="btn btn-secondary">Logout</a>
+          <a href="{% url 'subscription' %}" class="btn btn-secondary">subscription</a>
+
+
+          <div class="upload-wrapper">
+            <h3>📁 Import Contacts</h3>
+            <div class="form-group">
+              <label><input type="radio" name="email_source" value="csv" checked onchange="toggleSource()"> CSV
+                Upload</label>
+              <label><input type="radio" name="email_source" value="sql" onchange="toggleSource()"> SQL Import</label>
+            </div>
+
+            <div id="csv-block">
+              <input type="file" id="fileUpload" name="fileUpload" accept=".csv,.xlsx,.xls" hidden
+                onchange="showFileName()" />
+              <button type="button" class="upload-btn" onclick="document.getElementById('fileUpload').click();">Upload
+                CSV or Excel</button>
+              <p id="file-name" style="color: #333; margin-top: 8px; font-size: 0.9em;"></p>
+            </div>
+
+            <hr style="margin: 15px 0;" />
+
+            <div id="sql-block" style="display: none;">
+              <p style="font-weight: bold;">🔌 SQL Integration</p>
+              <input type="text" name="sql_url" id="sql_url" placeholder="SQL Connection URL" />
+              <input type="text" name="table_name" id="table_name" placeholder="Table Name" />
+
+              <div class="connect-buttons">
+                <button type="button" class="connect-btn primary" onclick="checkConnection()">Connect</button>
+                <button type="button" class="connect-btn secondary" onclick="previewEmails()">Preview</button>
+              </div>
+
+              <div id="sql-status" style="margin-top: 10px; color: #444;"></div>
+              <div id="preview-results" style="margin-top: 10px; font-size: 0.9em;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- ✅ AI Modal -->
+  <div id="aiModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeAIModal()">&times;</span>
+      <h3>Improve Email with AI</h3>
+      <textarea id="aiPrompt" placeholder="Describe how you want to improve this email..."></textarea>
+      <button type="button" class="btn btn-secondary" onclick="generateAIContent()">Generate</button>
+    </div>
+  </div>
+
+    <script src="/static/js/index.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,182 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Perfect Plan</title>
+
+<link href="{% static 'css/subscription.css' %}" rel="stylesheet" />
+  
+
+
+</head>
+<body>
+    <div class="subscription-container">
+        <button class="close-btn" onclick="closePage()">&times;</button>
+        
+        <div class="header">
+            <h1>Choose Your Perfect Plan</h1>
+            <p>Unlock premium features and take your experience to the next level with our flexible subscription options</p>
+        </div>
+
+        <form method="POST" id="subscriptionForm">
+            <!-- Django CSRF token would go here -->
+            <!-- {% csrf_token %} -->
+            
+            <div class="plans-container">
+                <!-- Free Trial Plan -->
+                <div class="plan-card" onclick="selectPlan('free')">
+                    <div class="free-trial-badge">Free Trial</div>
+                    <input type="radio" id="free" name="plan" value="free" class="plan-input">
+                    <div class="plan-header">
+                        <h3 class="plan-name">Free Trial</h3>
+                        <p class="plan-description">Try all premium features at no cost</p>
+                    </div>
+                    <div class="price-section">
+                        <div class="price">
+                            <span class="currency">₹</span>
+                            <span>0</span>
+                            <span class="period">/1st Time</span>
+                        </div>
+                    </div>
+                    <ul class="features free-features">
+                        <li>Full access to all features</li>
+                        <li>No credit card required</li>
+                        <li>Cancel anytime</li>
+                    </ul>
+                   <button type="button" class="card-btn card-btn-free" onclick="window.location.href='{% url 'start_free_trial' %}'">
+    Start Free Trial
+</button>
+
+                </div>
+
+                <!-- Monthly Plan -->
+                <div class="plan-card" onclick="selectPlan('monthly')">
+                    <input type="radio" id="monthly" name="plan" value="monthly" class="plan-input" checked>
+                    <div class="plan-header">
+                        <h3 class="plan-name">Monthly Plan</h3>
+                        <p class="plan-description">Perfect for trying out our premium features</p>
+                    </div>
+                    <div class="price-section">
+                        <div class="price">
+                            <span class="currency">₹</span>
+                            <span>119</span>
+                            <span class="period">/month</span>
+                        </div>
+                    </div>
+                    <ul class="features">
+                        <li>Full premium features</li>
+                        <li>Priority support</li>
+                        <li>No ads</li>
+                        <li>Cancel anytime</li>
+                    </ul>
+                    <button type="button" class="card-btn" onclick="processPayment('monthly')">
+                        Choose Monthly
+                    </button>
+                </div>
+
+                <!-- Yearly Plan -->
+                <div class="plan-card" onclick="selectPlan('yearly')">
+                    <div class="popular-badge">Most Popular</div>
+                    <input type="radio" id="yearly" name="plan" value="yearly" class="plan-input">
+                    <div class="plan-header">
+                        <h3 class="plan-name">Yearly Plan</h3>
+                        <p class="plan-description">Best value for committed users</p>
+                    </div>
+                    <div class="price-section">
+                        <div class="price">
+                            <span class="currency">₹</span>
+                            <span>999</span>
+                            <span class="period">/year</span>
+                        </div>
+                        <div class="savings-badge">Save ₹429 yearly!</div>
+                    </div>
+                    <ul class="features">
+                        <li>Everything in Monthly</li>
+                        <li>2 months free</li>
+                        <li>Priority requests</li>
+                        <li>Advanced analytics</li>
+                    </ul>
+                    <button type="button" class="card-btn card-btn-popular" onclick="processPayment('yearly')">
+                        Choose Yearly
+                    </button>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+               <button type="button" class="btn btn-secondary" onclick="window.location.href = '/index/';">
+    Maybe Later
+</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function selectPlan(planType) {
+            // Remove selected class from all cards
+            document.querySelectorAll('.plan-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked card
+            event.currentTarget.classList.add('selected');
+            
+            // Check the corresponding radio button
+            document.getElementById(planType).checked = true;
+        }
+
+        // Initialize with free trial selected
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.plan-card').classList.add('selected');
+        });
+
+        // Add payment processing function
+        function processPayment(planType) {
+            const planDetails = {
+                free: { price: '₹0', period: '1st Time', message: 'Starting your free trial' },
+                monthly: { price: '₹119', period: 'month', message: 'Processing payment for monthly plan' },
+                yearly: { price: '₹999', period: 'year', message: 'Processing payment for yearly plan' }
+            };
+            
+            const plan = planDetails[planType];
+            console.log(`${plan.message}: ${plan.price}/${plan.period}`);
+            
+            // Different handling for free trial vs paid plans
+            if (planType === 'free') {
+                alert(`🎉 Starting your 1st Time free trial! No payment required.`);
+                // Redirect to onboarding or dashboard
+                // window.location.href = '/onboarding';
+            } else {
+                alert(`Redirecting to payment gateway for ${planType} plan (${plan.price}/${plan.period})`);
+                // Redirect to payment processor
+                // window.location.href = '/payment/' + planType;
+            }
+        }
+
+        // Add close page function
+        function closePage() {
+            if (confirm('Are you sure you want to close this page?')) {
+                // You can either close the window or redirect
+                window.close(); // This might not work in all browsers
+                // Or redirect to another page:
+                // window.location.href = '/dashboard';
+            }
+        }
+
+        // Add form submission handling
+        document.getElementById('subscriptionForm').addEventListener('submit', function(e) {
+            const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
+            const action = e.submitter.value;
+            
+            if (action === 'subscribe') {
+                console.log(`Subscribing to ${selectedPlan} plan`);
+                // Add your subscription logic here
+            } else {
+                console.log('Skipping subscription');
+                // Add your skip logic here
+            }
+        });
+    </script>
+</body>
+</html>
