@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-@&+c#y3(_r(*(j@l@!uzgqz(5ahlygfq2(ij2awsh^nqg+_5aj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mail-automation-django.onrender.com', 'localhost', '127.0.0.1']
+
 
 
 # Application definition
