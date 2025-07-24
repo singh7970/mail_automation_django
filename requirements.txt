@@ -6,8 +6,7 @@ cachetools==5.5.2
 catalogue==2.0.10
 certifi==2025.6.15
 charset-normalizer==3.4.2
-ChatterBot==1.2.7
-chatterbot-corpus==1.2.2
+
 click==8.2.1
 cloudpathlib==0.21.1
 confection==0.1.5
