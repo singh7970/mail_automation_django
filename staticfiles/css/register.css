@@ -1,0 +1,75 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f5f7fa;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Container around form */
+.container {
+  max-width: 400px;
+  width: 90%;
+  margin: 20px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* ZestBotz Logo */
+.form-logo {
+  display: block;
+  margin: 0 auto 15px;
+  max-width: 120px;
+}
+
+/* Form header */
+.login-form h2 {
+  text-align: center;
+  color: #2d3748;
+  margin-bottom: 20px;
+}
+
+/* Input fields */
+.login-form input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+/* Button */
+.login-form button {
+  width: 100%;
+  padding: 12px;
+  background-color: hsl(30, 80%, 61%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.login-form button:hover {
+  background-color: #e76f00;
+}
+
+/* Error messages */
+.login-form ul {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.login-form li {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+}
