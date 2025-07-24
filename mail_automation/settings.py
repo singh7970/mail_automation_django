@@ -78,11 +78,11 @@ WSGI_APPLICATION = 'mail_automation.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':os.getenv("NAME") ,
+        'NAME': os.getenv("NAME"),
         'USER': os.getenv("USER"),
-        'PASSWORD':os.getenv("PASSWORD") ,
-        'HOST': os.getenv("HOST"),
-        'PORT':  os.getenv("PORT",'3306'),
+        'PASSWORD': os.getenv("PASSWORD"),
+        'HOST': os.getenv("HOST") or 'localhost',
+        'PORT': os.getenv("PORT") or '3306',
     },
     'sqlite': {
         'ENGINE': 'django.db.backends.sqlite3',
